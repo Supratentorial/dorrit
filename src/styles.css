@@ -1,1 +1,6 @@
-/* You can add global styles to this file, and also import other style files */
+@import "../node_modules/semantic-ui-css/semantic.css";
+
+body{
+  background-color: #ECEFF1;
+  padding-top: 50px;
+}

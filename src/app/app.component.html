@@ -1,3 +1,39 @@
-<h1>
-  {{title}}
-</h1>
+<div class="ui grid container">
+  <div class="one column row">
+    <div class="column">
+      <div class="ui segment">
+        <div class="ui form">
+          <div class="field">
+            <label>Webstro Pathology Results</label>
+            <textarea [(ngModel)]="toBeConvertedResults"
+                      placeholder="Paste Webstro pathology results here..."></textarea>
+          </div>
+          <button class="circular ui icon button" (click)="clearForm()">
+            <i class="trash outline icon"></i>
+            Clear
+          </button>
+          <button class="circular ui right labeled icon button primary" (click)="convertPathologyResults()">
+            <i class="chevron circle right icon"></i>
+            Convert
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="on column row">
+    <div class="column">
+      <div *ngIf="convertedResults" class="ui teal segment">
+        <div class="ui form">
+          <div class="field">
+            <label>Formatted Pathology Results</label>
+            <textarea>{{convertedResults}}</textarea>
+          </div>
+          <button class="circular ui icon button">
+            <i class="copy icon"></i>
+            Copy
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
