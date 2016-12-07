@@ -17,7 +17,7 @@ export class AppComponent {
   }
 
   convertPathologyResults(): void {
-    this.convertedResults = this.converterService.convertPathologyResults(this.toBeConvertedResults);
+    //this.convertedResults = this.converterService.convertPathologyResults(this.toBeConvertedResults);
   }
 
   clearForm(){
