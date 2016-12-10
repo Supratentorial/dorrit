@@ -1,5 +1,5 @@
 export class TestResult{
-  testType:string;
+  type:string;
   value: string;
   datePerformed: string;
 }
