@@ -5,8 +5,6 @@ import * as _ from "lodash";
 @Injectable()
 export class ConverterService {
 
-  public static TEST_SHORT_NAMES: string[];
-
   public static UNCOMMON_TEST_TYPE: string[] = [
     "Red cell count",
     "Haematocrit",
@@ -20,10 +18,10 @@ export class ConverterService {
   ];
 
   convertPathologyResults(toBeConverted: string): string {
-    //toBeConverted = this.replaceAllWithShortTestNames(toBeConverted);
+    //toBeConverted = this.convertToShortType(toBeConverted);
     let lines: string[] = toBeConverted.split('\n');
     let testResults: Array<TestResult> = [];
-    let dateStrings = ConverterService.getDateStrings(lines[0]);
+    let dateStrings = ConverterService.getTestDates(lines[0]);
     for (let i = 6; i < lines.length; i++) {
       let testType: string = lines[i].slice(0, 20).trim();
       for (let j = 0; j < dateStrings.length; j++) {
@@ -43,7 +41,7 @@ export class ConverterService {
     return this.buildResultString(testResults, dateStrings);
   }
 
-  static getDateStrings(firstLine: string): string[] {
+  static getTestDates(firstLine: string): string[] {
     let datesString: string = (firstLine.slice(20));
     let dateStringArray: string[] = [];
     for (let i = 0; i < datesString.length; i += 11) {
@@ -53,9 +51,50 @@ export class ConverterService {
     return dateStringArray;
   }
 
-  // replaceAllWithShortTestNames(toBeConverted: string): string {
-  //   return toBeConverted;
-  // }
+  convertToShortType(testType: string): string {
+    let shortTestType: string = '';
+    switch (testType) {
+      case 'Sodium':
+        shortTestType = 'Na';
+        break;
+      case 'Potassium':
+        shortTestType = 'K';
+        break;
+      case 'Chloride':
+        shortTestType = 'Chlor';
+        break;
+      case 'Bicarbonate':
+        shortTestType = 'Bicarb';
+        break;
+      case 'Creatinine':
+        shortTestType = 'Creat';
+        break;
+      case 'Creatine Kinase':
+        shortTestType = 'CK';
+        break;
+      case 'Troponin I':
+        shortTestType = 'Trop';
+        break;
+      case 'Corrected':
+        shortTestType = 'Corr.';
+        break;
+      case 'Calcium':
+        shortTestType = 'Ca';
+        break;
+      case 'Magnesium':
+        shortTestType = 'Mg';
+        break;
+      case 'Phosphate':
+        shortTestType = 'Phos';
+        break;
+      case 'Albumin':
+        shortTestType = 'Alb';
+        break;
+      default:
+        shortTestType = testType;
+    }
+    return shortTestType;
+  }
 
   buildResultString(testResults: Array<TestResult>, dateStrings: string[]): string {
     let resultString: string = '';
@@ -67,6 +106,7 @@ export class ConverterService {
       resultString += dateStrings[i] + ' ';
 
       _.forEach(testsByDate, (testResult: TestResult) => {
+        testResult.type = this.convertToShortType(testResult.type);
         resultString += testResult.type + ' ' + testResult.value + ' ';
       });
     }
