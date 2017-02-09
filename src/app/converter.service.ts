@@ -1,24 +1,31 @@
 import {Injectable} from '@angular/core';
 import {TestResult} from "./test-result";
 import * as _ from "lodash";
+import {ShortTypesService} from "./short-types.service";
+import {ExcludeTypesService} from "./exclude-types.service";
 
 @Injectable()
 export class ConverterService {
 
-  public static UNCOMMON_TEST_TYPE: string[] = [
-    "Red cell count",
-    "Haematocrit",
-    "MCH",
-    "MCHC",
-    "MPV",
-    "Lymphocytes",
-    "Monocytes",
-    "Eosinophils",
-    "Basophils"
-  ];
+  constructor(private shortTypesService: ShortTypesService, private excludeTypesService: ExcludeTypesService) {
 
-  convertPathologyResults(toBeConverted: string): string {
-    //toBeConverted = this.convertToShortType(toBeConverted);
+  }
+
+  static isUrine(toBeConverted: string): boolean {
+    return _.includes(toBeConverted, 'URINE MICROSCOPY AND CULTURE');
+
+  }
+
+  static isBlood(toBeConverted: string): boolean {
+    return _.includes(toBeConverted, 'Collection Date:');
+
+  }
+
+  processUrine(toBeConverted): string {
+    return 'urine';
+  }
+
+  processBlood(toBeConverted): string {
     let lines: string[] = toBeConverted.split('\n');
     let testResults: Array<TestResult> = [];
     let dateStrings = ConverterService.getTestDates(lines[0]);
@@ -38,8 +45,29 @@ export class ConverterService {
         }
       }
     }
+
     return this.buildResultString(testResults, dateStrings);
   }
+
+
+  convertPathologyResults(toBeConverted: string): string {
+    if (ConverterService.isUrine(toBeConverted)) {
+      return this.processUrine(toBeConverted);
+    } else if (ConverterService.isBlood(toBeConverted)) {
+      return this.processBlood(toBeConverted);
+    }
+  }
+
+  static getBloodTestTypes(lines: string[]): string[]{
+    let testTypes : string[] = [];
+    for (let i = 6; i<lines.length; i++ ){
+      let testType: string = lines[i].slice(0, 20).trim();
+      testTypes.push(testType);
+    }
+    return testTypes;
+  }
+
+  static getBloodTestValues
 
   static getTestDates(firstLine: string): string[] {
     let datesString: string = (firstLine.slice(20));
@@ -51,51 +79,6 @@ export class ConverterService {
     return dateStringArray;
   }
 
-  convertToShortType(testType: string): string {
-    let shortTestType: string = '';
-    switch (testType) {
-      case 'Sodium':
-        shortTestType = 'Na';
-        break;
-      case 'Potassium':
-        shortTestType = 'K';
-        break;
-      case 'Chloride':
-        shortTestType = 'Chlor';
-        break;
-      case 'Bicarbonate':
-        shortTestType = 'Bicarb';
-        break;
-      case 'Creatinine':
-        shortTestType = 'Creat';
-        break;
-      case 'Creatine Kinase':
-        shortTestType = 'CK';
-        break;
-      case 'Troponin I':
-        shortTestType = 'Trop';
-        break;
-      case 'Corrected':
-        shortTestType = 'Corr.';
-        break;
-      case 'Calcium':
-        shortTestType = 'Ca';
-        break;
-      case 'Magnesium':
-        shortTestType = 'Mg';
-        break;
-      case 'Phosphate':
-        shortTestType = 'Phos';
-        break;
-      case 'Albumin':
-        shortTestType = 'Alb';
-        break;
-      default:
-        shortTestType = testType;
-    }
-    return shortTestType;
-  }
-
   buildResultString(testResults: Array<TestResult>, dateStrings: string[]): string {
     let resultString: string = '';
     for (let i = 0; i < dateStrings.length; i++) {
@@ -104,9 +87,13 @@ export class ConverterService {
         resultString += '\n';
       }
       resultString += dateStrings[i] + ' ';
-
+      for (let i = testsByDate.length; i--;) {
+        if (this.excludeTypesService.isUncommon(testsByDate[i].type)) {
+          testsByDate.splice(i, 1);
+        }
+      }
       _.forEach(testsByDate, (testResult: TestResult) => {
-        testResult.type = this.convertToShortType(testResult.type);
+        testResult.type = this.shortTypesService.getShortType(testResult.type);
         resultString += testResult.type + ' ' + testResult.value + ' ';
       });
     }

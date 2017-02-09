@@ -16,24 +16,29 @@
             <i class="chevron circle right icon"></i>
             Convert
           </button>
-          <button class="circular ui icon button">
-            <i class="plus teal icon"></i>
-            Add</button>
         </div>
       </div>
     </div>
   </div>
-  <div class="on column row">
+  <div class="one column row">
     <div class="column">
       <div *ngIf="convertedResults" class="ui teal segment">
         <div class="ui form">
           <div class="field">
             <label>Formatted Pathology Results</label>
-            <textarea>{{convertedResults}}</textarea>
+            <textarea #inputTarget>{{convertedResults}}</textarea>
           </div>
-          <button class="circular ui icon button">
+          <button class="circular ui icon button" [ngxClipboard]="inputTarget">
             <i class="copy icon"></i>
             Copy
+          </button>
+          <button class="circular ui icon button" (click)="reorderTests()">
+            <i class="sort icon"></i>
+            Reorder
+          </button>
+          <button class="circular ui icon button">
+            <i class="bar chart icon"></i>
+            Graph
           </button>
         </div>
       </div>
