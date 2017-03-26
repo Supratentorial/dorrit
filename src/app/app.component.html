@@ -1,39 +1,53 @@
-<div class="ui grid container">
-  <div class="one column row">
-    <div class="column">
-      <div class="ui segment">
-        <div class="ui form">
-          <div class="field">
-            <label>Webstro Pathology Results</label>
-            <textarea [(ngModel)]="toBeConvertedResults"
-                      placeholder="Paste Webstro pathology results here..."></textarea>
+<div class="container-fluid">
+  <div class="row mt-3 mb-3">
+    <div class="col-lg-6">
+      <div class="card">
+        <div class="card-header">
+          Convert Stuff
+        </div>
+        <div class="card-block no-padding">
+        </div>
+        <textarea [(ngModel)]="toBeConvertedResults" placeholder="Paste pathology results here..."></textarea>
+        <div class="toolbar d-flex flex-row">
+          <div class="btn-circular mr-auto ml-3 mb-3 mt-3" (click)="clearForm()"
+               [inlineSVG]="'/assets/images/icon-delete.svg'"></div>
+          <div class="btn-circular mr-3 mb-3 mt-3" (click)="convertPathologyResults()"
+               [inlineSVG]="'/assets/images/icon-convert.svg'"></div>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-3">
+      <app-exclude-types></app-exclude-types>
+    </div>
+  </div>
+
+  <div class="row mb-3" *ngIf="convertedResults">
+    <div class="col-lg-6">
+      <div class="card">
+        <div class="card-header">
+          Formatted Results
+        </div>
+        <div class="card-block no-padding">
+          <textarea #inputTarget>{{convertedResults}}</textarea>
+          <div class="toolbar d-flex flex-row-reverse">
+            <div class="btn-circular mb-3 mr-3 mt-3" [ngxClipboard]="inputTarget"
+                 [inlineSVG]="'/assets/images/icon-copy.svg'"></div>
           </div>
-          <button class="circular ui icon button" (click)="clearForm()">
-            <i class="trash red outline icon"></i>
-            Clear
-          </button>
-          <button class="circular ui right labeled icon button primary" (click)="convertPathologyResults()">
-            <i class="chevron circle right icon"></i>
-            Convert
-          </button>
         </div>
       </div>
     </div>
   </div>
-  <div class="one column row">
-    <div class="column">
-      <div *ngIf="convertedResults" class="ui teal segment">
-        <div class="ui form">
-          <div class="field">
-            <label>Formatted Pathology Results</label>
-            <textarea #inputTarget>{{convertedResults}}</textarea>
-          </div>
-          <button class="circular ui icon button" [ngxClipboard]="inputTarget">
-            <i class="copy icon"></i>
-            Copy
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
+  <!--<div class="row">-->
+    <!--<div class="col-lg-4">-->
+      <!--<div class="alert alert-info">-->
+        <!--<span>Copy to MS Word table:  </span>-->
+        <!--<kbd>Alt</kbd> + <kbd>N</kbd> + <kbd>T</kbd> + <kbd>V</kbd>-->
+      <!--</div>-->
+    <!--</div>-->
+  <!--</div>-->
 </div>
+
+
+
+
+

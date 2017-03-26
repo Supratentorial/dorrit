@@ -5,16 +5,20 @@ import { HttpModule } from '@angular/http';
 
 import { AppComponent } from './app.component';
 import {ClipboardModule} from "ngx-clipboard";
+import { ExcludeTypesComponent } from './settings/settings.component';
+import {InlineSVGModule} from "ng-inline-svg";
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    ExcludeTypesComponent
   ],
   imports: [
     BrowserModule,
     FormsModule,
     HttpModule,
-    ClipboardModule
+    ClipboardModule,
+    InlineSVGModule
   ],
   providers: [],
   bootstrap: [AppComponent]

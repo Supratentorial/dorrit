@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {TestResult} from "./test-result";
 import * as _ from "lodash";
 import {ShortTypesService} from "./short-types.service";
-import {ExcludeTypesService} from "./exclude-types.service";
+import {ExcludeTypesService} from "./settings/exclude-types.service";
 
 @Injectable()
 export class ConverterService {
@@ -75,7 +75,7 @@ export class ConverterService {
       if (i > 0) {
         resultString += '\n';
       }
-      resultString += dateStrings[i] + ' ';
+      resultString += dateStrings[i] + '\t';
       for (let i = testsByDate.length; i--;) {
         if (this.excludeTypesService.isUncommon(testsByDate[i].type)) {
           testsByDate.splice(i, 1);
@@ -83,7 +83,8 @@ export class ConverterService {
       }
       _.forEach(testsByDate, (testResult: TestResult) => {
         testResult.type = this.shortTypesService.getShortType(testResult.type);
-        resultString += testResult.type + ' ' + testResult.value + ' ';
+
+        resultString += testResult.type + ' ' + testResult.value + '\t';
       });
     }
     return resultString;
