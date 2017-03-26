@@ -2,6 +2,7 @@ import {Component} from '@angular/core';
 import {ConverterService} from "./converter.service";
 import {ShortTypesService} from "./short-types.service";
 import {ExcludeTypesService} from "./exclude-types.service";
+import * as _ from 'lodash';
 
 @Component({
   selector: 'app-root',
@@ -22,13 +23,11 @@ export class AppComponent {
     this.convertedResults = this.converterService.convertPathologyResults(this.toBeConvertedResults);
   }
 
-  clearForm(){
+  clearForm() {
     this.toBeConvertedResults = '';
     this.convertedResults = '';
   }
 
-  reorderTests(){
-
-
+  reorderTests() {
   }
 }

@@ -28,25 +28,25 @@ export class ConverterService {
   processBlood(toBeConverted): string {
     let lines: string[] = toBeConverted.split('\n');
     let testResults: Array<TestResult> = [];
-    let dateStrings = ConverterService.getTestDates(lines[0]);
+    let bloodTestDates = ConverterService.getBloodTestDates(lines[0]);
     for (let i = 6; i < lines.length; i++) {
-      let testType: string = lines[i].slice(0, 20).trim();
-      for (let j = 0; j < dateStrings.length; j++) {
+      let bloodTestType: string = lines[i].slice(0, 20).trim();
+      for (let j = 0; j < bloodTestDates.length; j++) {
         let startPoint = 20 + j * 11;
         let endPoint = startPoint + 11;
-        let testValue: string = lines[i].slice(startPoint, endPoint).trim();
-        if (testValue) {
+        let bloodTestValue: string = lines[i].slice(startPoint, endPoint).trim();
+        if (bloodTestValue) {
           let testResult: TestResult = {
-            type: testType,
-            value: testValue,
-            datePerformed: dateStrings[j]
+            type: bloodTestType,
+            value: bloodTestValue,
+            datePerformed: bloodTestDates[j]
           };
           testResults.push(testResult);
         }
       }
     }
-
-    return this.buildResultString(testResults, dateStrings);
+    console.log(testResults);
+    return this.buildResultString(testResults, bloodTestDates);
   }
 
 
@@ -58,18 +58,7 @@ export class ConverterService {
     }
   }
 
-  static getBloodTestTypes(lines: string[]): string[]{
-    let testTypes : string[] = [];
-    for (let i = 6; i<lines.length; i++ ){
-      let testType: string = lines[i].slice(0, 20).trim();
-      testTypes.push(testType);
-    }
-    return testTypes;
-  }
-
-  static getBloodTestValues
-
-  static getTestDates(firstLine: string): string[] {
+  static getBloodTestDates(firstLine: string): string[] {
     let datesString: string = (firstLine.slice(20));
     let dateStringArray: string[] = [];
     for (let i = 0; i < datesString.length; i += 11) {
