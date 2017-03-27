@@ -15,10 +15,5 @@ export class SettingsService {
   constructor() {
   }
 
-  getUniqueTestNames(testResults : Array<TestResult>) {
-    let uniqueTestNames = _.uniqWith(testResults, (testResult: TestResult) => {
-      return testResult.type;
-    });
-    console.log(uniqueTestNames);
-  }
+
 }

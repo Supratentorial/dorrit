@@ -17,17 +17,19 @@ export class AppComponent {
   toBeConvertedResults: string;
   settings: boolean = false;
 
-  constructor(private converterService: ConverterService, private settingsService : SettingsService) {
+  constructor(public converterService: ConverterService) {
 
   }
 
   convertPathologyResults(): void {
-    this.convertedResults = this.converterService.convertPathologyResults(this.toBeConvertedResults);
+    this.converterService.convertPathologyResults();
   }
 
   clearForm() {
-    this.toBeConvertedResults = '';
-    this.convertedResults = '';
+    this.converterService.resultObject.resultString = '';
+    this.converterService.inputObject.input = '';
+    this.converterService.testResults = [];
+    this.converterService.uniqueTestNames = [];
   }
 
   toggleSettings() {

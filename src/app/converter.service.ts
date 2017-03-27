@@ -3,6 +3,8 @@ import {TestResult} from "./models/test-result";
 import * as _ from "lodash";
 import {ShortTypesService} from "./short-types.service";
 import {ExcludeTypesService} from "./settings/exclude-types.service";
+import {ResultObject} from "./models/result-object";
+import {InputObject} from "./models/input-object";
 
 @Injectable()
 export class ConverterService {
@@ -11,7 +13,10 @@ export class ConverterService {
 
   }
 
-  testResults : Array<TestResult> = [];
+  testResults: Array<TestResult> = [];
+  inputObject: InputObject = {input: ''};
+  resultObject: ResultObject = {resultString: ''};
+  uniqueTestNames: string[];
 
   static isUrine(toBeConverted: string): boolean {
     return _.includes(toBeConverted, 'URINE MICROSCOPY AND CULTURE');
@@ -24,25 +29,26 @@ export class ConverterService {
   }
 
   //Entry point to conversion
-  convertPathologyResults(toBeConverted: string): string {
-    if (ConverterService.isUrine(toBeConverted)) {
-      return this.processUrine(toBeConverted);
-    } else if (ConverterService.isBlood(toBeConverted)) {
-      return this.processBlood(toBeConverted);
+  convertPathologyResults() {
+    if (ConverterService.isUrine(this.inputObject.input)) {
+      this.processUrine();
+    } else if (ConverterService.isBlood(this.inputObject.input)) {
+      this.processBlood();
     }
   }
 
-  processUrine(toBeConverted): string {
+  processUrine(): string {
     return 'urine';
   }
 
-  processBlood(toBeConverted): string {
-    let lines: string[] = toBeConverted.split('\n');
+  processBlood() {
+    let lines: string[] = this.inputObject.input.split('\n');
     let bloodTestDates = ConverterService.getBloodTestDates(lines[0]);
     this.extractTestResults(lines, bloodTestDates);
+    this.getUniqueTestNames();
     this.removeUnwantedTests();
     this.shortenTestResultNames();
-    return this.buildResultString(this.testResults, bloodTestDates);
+    this.buildResultString(this.testResults, bloodTestDates);
   }
 
   extractTestResults(lines: string[], bloodTestDates: string[]) {
@@ -88,22 +94,26 @@ export class ConverterService {
     return bloodTestDates;
   }
 
-  buildResultString(testResults: Array<TestResult>, dateStrings: string[]): string {
-    let resultString: string = '';
+  getUniqueTestNames() {
+    this.uniqueTestNames = _.map(_.uniqBy(this.testResults, 'type'), (testResult: TestResult) => {
+      return testResult.type;
+    });
+  }
+
+  buildResultString(testResults: Array<TestResult>, dateStrings: string[]) {
     for (let i = 0; i < dateStrings.length; i++) {
       let testsByDate = _.filter(testResults, ['datePerformed', dateStrings[i]]);
       if (i > 0) {
-        resultString += '\n';
+        this.resultObject.resultString += '\n';
       }
-      resultString += dateStrings[i] + '\t';
-      for (let j = 0; j < testsByDate.length; j++){
+      this.resultObject.resultString += dateStrings[i] + '\t';
+      for (let j = 0; j < testsByDate.length; j++) {
         let testResult = testsByDate[j];
-        resultString += testResult.type + ' ' + testResult.value;
-        if(j != testsByDate.length -1){
-          resultString += '\t';
+        this.resultObject.resultString += testResult.type + ' ' + testResult.value;
+        if (j != testsByDate.length - 1) {
+          this.resultObject.resultString += '\t';
         }
       }
     }
-    return resultString;
   }
 }

@@ -9,13 +9,15 @@ import {ConverterService} from "../converter.service";
 })
 export class SettingsComponent implements OnInit {
 
-
-
-  constructor(private settingsService: SettingsService, private converterService : ConverterService) {
+  constructor(private settingsService: SettingsService, public converterService : ConverterService) {
   }
 
   ngOnInit() {
 
+  }
+
+  toggleTestResult(){
+    console.log("toggling");
   }
 
 }

@@ -7,7 +7,7 @@
         </div>
         <div class="card-block no-padding">
         </div>
-        <textarea [(ngModel)]="toBeConvertedResults" placeholder="Paste pathology results here..."></textarea>
+        <textarea [(ngModel)]="converterService.inputObject.input" placeholder="Paste pathology results here..."></textarea>
         <div class="toolbar d-flex flex-row">
           <div class="btn-circular mr-auto ml-3 mb-3 mt-3" (click)="clearForm()"
                [inlineSVG]="'/assets/images/icon-delete.svg'"></div>
@@ -21,14 +21,14 @@
     </div>
   </div>
 
-  <div class="row mb-3" *ngIf="convertedResults">
+  <div class="row mb-3" *ngIf="converterService.resultObject.resultString">
     <div class="col-lg-6">
       <div class="card">
         <div class="card-header">
           Formatted Results
         </div>
         <div class="card-block no-padding">
-          <textarea #inputTarget>{{convertedResults}}</textarea>
+          <textarea #inputTarget>{{converterService.resultObject.resultString}}</textarea>
           <div class="toolbar d-flex flex-row-reverse">
             <div class="btn-circular mb-3 mr-3 mt-3" [ngxClipboard]="inputTarget"
                  [inlineSVG]="'/assets/images/icon-copy.svg'"></div>

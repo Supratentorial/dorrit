@@ -16,6 +16,11 @@
       </label>
     </div>
     <hr/>
+    <div class="d-flex flex-wrap">
+      <div (click)="toggleTestResult()" class="test-type" *ngFor="let testName of converterService.uniqueTestNames">
+        {{testName}}
+      </div>
+    </div>
   </div>
 </div>
 
