@@ -3,10 +3,11 @@ import {ConverterService} from "./converter.service";
 import {ShortTypesService} from "./short-types.service";
 import {ExcludeTypesService} from "./settings/exclude-types.service";
 import * as _ from 'lodash';
+import {SettingsService} from "./settings/settings.service";
 
 @Component({
   selector: 'app-root',
-  providers: [ConverterService, ShortTypesService, ExcludeTypesService],
+  providers: [],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
@@ -16,7 +17,7 @@ export class AppComponent {
   toBeConvertedResults: string;
   settings: boolean = false;
 
-  constructor(private converterService: ConverterService) {
+  constructor(private converterService: ConverterService, private settingsService : SettingsService) {
 
   }
 

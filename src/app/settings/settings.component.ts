@@ -1,15 +1,21 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import {SettingsService} from "./settings.service";
+import {ConverterService} from "../converter.service";
 
 @Component({
-  selector: 'app-exclude-types',
+  selector: 'app-settings',
   templateUrl: './settings.component.html',
   styleUrls: ['./settings.component.scss']
 })
-export class ExcludeTypesComponent implements OnInit {
+export class SettingsComponent implements OnInit {
 
-  constructor() { }
+
+
+  constructor(private settingsService: SettingsService, private converterService : ConverterService) {
+  }
 
   ngOnInit() {
+
   }
 
 }

@@ -1,7 +1,7 @@
-Collection Date:    29/11/16   01/12/16   06/12/16   07/12/16   08/12/16   
-Collection Time:    16:10      08:45      09:15      11:03      11:14      
-Lab Ref No:         161017518  161020926  161034089  161037266  161040306  
-Location:           KRS6       KRS6       KRS6       KRS6       KRS6       Units    Ref. Int.  
+Collection Date:    29/11/16   01/12/16   06/12/16   07/12/16   08/12/16
+Collection Time:    16:10      08:45      09:15      11:03      11:14
+Lab Ref No:         161017518  161020926  161034089  161037266  161040306
+Location:           KRS6       KRS6       KRS6       KRS6       KRS6       Units    Ref. Int.
 Full Blood Examination
 
 Haemoglobin         115 L      117 L      110 L      109 L      115 L      g/L      (125-175)

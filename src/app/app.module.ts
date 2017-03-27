@@ -5,13 +5,17 @@ import { HttpModule } from '@angular/http';
 
 import { AppComponent } from './app.component';
 import {ClipboardModule} from "ngx-clipboard";
-import { ExcludeTypesComponent } from './settings/settings.component';
 import {InlineSVGModule} from "ng-inline-svg";
+import {SettingsComponent} from "./settings/settings.component";
+import {ConverterService} from "./converter.service";
+import {ShortTypesService} from "./short-types.service";
+import {ExcludeTypesService} from "./settings/exclude-types.service";
+import {SettingsService} from "./settings/settings.service";
 
 @NgModule({
   declarations: [
     AppComponent,
-    ExcludeTypesComponent
+    SettingsComponent
   ],
   imports: [
     BrowserModule,
@@ -20,7 +24,7 @@ import {InlineSVGModule} from "ng-inline-svg";
     ClipboardModule,
     InlineSVGModule
   ],
-  providers: [],
+  providers: [ConverterService, ShortTypesService, ExcludeTypesService, SettingsService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
