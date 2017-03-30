@@ -29,7 +29,7 @@ export class AppComponent {
     this.converterService.resultObject.resultString = '';
     this.converterService.inputObject.input = '';
     this.converterService.testResults = [];
-    this.converterService.uniqueTestNames = [];
+    this.converterService.uniqueTestTypes = [];
   }
 
   toggleSettings() {

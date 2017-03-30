@@ -16,12 +16,13 @@
       </label>
     </div>
     <hr/>
+    <div *ngIf="converterService.uniqueTestTypes.length > 0">Select test types:</div>
     <div class="d-flex flex-wrap">
-      <div (click)="toggleTestResult()" class="test-type" *ngFor="let testName of converterService.uniqueTestNames">
-        {{testName}}
+      <div *ngFor="let testType of converterService.uniqueTestTypes">
+        <div (click)="toggleTestResult(testType)" class="test-type" [ngClass]="{'active': !testType.isExcluded}">
+          {{testType.name}}
+        </div>
       </div>
     </div>
   </div>
 </div>
-
-

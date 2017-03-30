@@ -18,10 +18,11 @@ export class ShortTypesService {
     'White cell count': 'WCC',
     'Platelet count': 'Plt',
     'Neutrophils': 'Neuts',
-    'CRP (Sensitive)': 'CRP'
+    'CRP (Sensitive)': 'CRP',
+    'Total Bilirubin': 'Bili'
   };
 
-  getShortType(type: string){
-      return this.shortNames[type] || type;
+  getShortType(testName: string){
+      return this.shortNames[testName] || testName;
   }
 }

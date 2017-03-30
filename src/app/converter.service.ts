@@ -5,6 +5,7 @@ import {ShortTypesService} from "./short-types.service";
 import {ExcludeTypesService} from "./settings/exclude-types.service";
 import {ResultObject} from "./models/result-object";
 import {InputObject} from "./models/input-object";
+import {TestType} from "./models/test-type";
 
 @Injectable()
 export class ConverterService {
@@ -16,7 +17,7 @@ export class ConverterService {
   testResults: Array<TestResult> = [];
   inputObject: InputObject = {input: ''};
   resultObject: ResultObject = {resultString: ''};
-  uniqueTestNames: string[];
+  uniqueTestTypes: Array<TestType> = [];
 
   static isUrine(toBeConverted: string): boolean {
     return _.includes(toBeConverted, 'URINE MICROSCOPY AND CULTURE');
@@ -30,6 +31,9 @@ export class ConverterService {
 
   //Entry point to conversion
   convertPathologyResults() {
+    this.testResults = [];
+    this.resultObject.resultString = "";
+    this.uniqueTestTypes = [];
     if (ConverterService.isUrine(this.inputObject.input)) {
       this.processUrine();
     } else if (ConverterService.isBlood(this.inputObject.input)) {
@@ -45,9 +49,8 @@ export class ConverterService {
     let lines: string[] = this.inputObject.input.split('\n');
     let bloodTestDates = ConverterService.getBloodTestDates(lines[0]);
     this.extractTestResults(lines, bloodTestDates);
-    this.getUniqueTestNames();
-    this.removeUnwantedTests();
-    this.shortenTestResultNames();
+    this.getUniqueTestTypes();
+    this.updateTestExcluded();
     this.buildResultString(this.testResults, bloodTestDates);
   }
 
@@ -60,7 +63,7 @@ export class ConverterService {
         let bloodTestValue: string = lines[i].slice(startPoint, endPoint).trim();
         if (bloodTestValue) {
           let testResult: TestResult = {
-            type: bloodTestName,
+            type: {name: bloodTestName, isExcluded: false},
             value: bloodTestValue,
             datePerformed: bloodTestDates[j]
           };
@@ -70,18 +73,16 @@ export class ConverterService {
     }
   }
 
-  shortenTestResultNames() {
-    _.forEach(this.testResults, (testResult: TestResult) => {
-      testResult.type = this.shortTypesService.getShortType(testResult.type);
+  updateTestExcluded() {
+    _.forEach(this.testResults, (testResult) => {
+
     });
   }
 
-  removeUnwantedTests() {
-    for (let i = this.testResults.length; i--;) {
-      if (this.excludeTypesService.isUncommon(this.testResults[i].type)) {
-        this.testResults.splice(i, 1);
-      }
-    }
+  shortenTestResultNames() {
+    _.forEach(this.testResults, (testResult: TestResult) => {
+      testResult.type.shortName = this.shortTypesService.getShortType(testResult.type.name);
+    });
   }
 
   static getBloodTestDates(firstLine: string): string[] {
@@ -94,9 +95,20 @@ export class ConverterService {
     return bloodTestDates;
   }
 
-  getUniqueTestNames() {
-    this.uniqueTestNames = _.map(_.uniqBy(this.testResults, 'type'), (testResult: TestResult) => {
+  getUniqueTestTypes() {
+    let uniqueTestResults = _.uniqBy(this.testResults, (testResult: TestResult) => {
+      return testResult.type.name;
+    });
+
+    this.uniqueTestTypes = _.map(uniqueTestResults, (testResult: TestResult) => {
       return testResult.type;
+    });
+
+    _.forEach(this.uniqueTestTypes, (testType: TestType) => {
+      let existingType = _.find(this.excludeTypesService.excludedTypes, {name: testType.name});
+      if (existingType) {
+        testType.isExcluded = existingType.isExcluded;
+      }
     });
   }
 
@@ -109,7 +121,9 @@ export class ConverterService {
       this.resultObject.resultString += dateStrings[i] + '\t';
       for (let j = 0; j < testsByDate.length; j++) {
         let testResult = testsByDate[j];
-        this.resultObject.resultString += testResult.type + ' ' + testResult.value;
+        if (!testResult.type.isExcluded) {
+          this.resultObject.resultString += testResult.type.name + ' ' + testResult.value;
+        }
         if (j != testsByDate.length - 1) {
           this.resultObject.resultString += '\t';
         }

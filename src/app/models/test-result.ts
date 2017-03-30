@@ -1,5 +1,6 @@
+import {TestType} from "./test-type";
 export class TestResult{
-  type:string;
+  type: TestType;
   value: string;
   datePerformed: string;
 }

@@ -1,6 +1,9 @@
 import {Component, OnInit} from '@angular/core';
 import {SettingsService} from "./settings.service";
 import {ConverterService} from "../converter.service";
+import {TestResult} from "../models/test-result";
+import {TestType} from "../models/test-type";
+import {ExcludeTypesService} from "./exclude-types.service";
 
 @Component({
   selector: 'app-settings',
@@ -9,15 +12,20 @@ import {ConverterService} from "../converter.service";
 })
 export class SettingsComponent implements OnInit {
 
-  constructor(private settingsService: SettingsService, public converterService : ConverterService) {
+  constructor(private settingsService: SettingsService,
+              public converterService : ConverterService,
+              private excludeTypesService : ExcludeTypesService) {
   }
 
   ngOnInit() {
 
   }
 
-  toggleTestResult(){
-    console.log("toggling");
+  toggleTestResult(testType: TestType){
+
+    this.excludeTypesService.updateExclusionStatus(testType);
+    this.converterService.convertPathologyResults();
+
   }
 
 }

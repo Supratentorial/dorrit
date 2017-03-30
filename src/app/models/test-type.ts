@@ -3,5 +3,6 @@
  */
 export class TestType{
   name: string;
-
+  shortName?: string;
+  isExcluded: boolean;
 }
