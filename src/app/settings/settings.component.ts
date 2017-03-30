@@ -22,10 +22,9 @@ export class SettingsComponent implements OnInit {
   }
 
   toggleTestResult(testType: TestType){
-
+    testType.isExcluded = !testType.isExcluded;
     this.excludeTypesService.updateExclusionStatus(testType);
     this.converterService.convertPathologyResults();
-
   }
 
 }

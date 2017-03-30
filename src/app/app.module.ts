@@ -11,11 +11,13 @@ import {ConverterService} from "./converter.service";
 import {ShortTypesService} from "./short-types.service";
 import {ExcludeTypesService} from "./settings/exclude-types.service";
 import {SettingsService} from "./settings/settings.service";
+import {TestTypeFilterPipe} from "./settings/test-type-filter.pipe";
 
 @NgModule({
   declarations: [
     AppComponent,
-    SettingsComponent
+    SettingsComponent,
+    TestTypeFilterPipe
   ],
   imports: [
     BrowserModule,

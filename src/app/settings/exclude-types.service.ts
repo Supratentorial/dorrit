@@ -22,12 +22,13 @@ export class ExcludeTypesService {
   ];
 
   updateExclusionStatus(testType: TestType) {
-    if(!_.some(this.excludedTypes, {name: testType.name})){
-      testType.isExcluded = !testType.isExcluded;
+    if (!_.some(this.excludedTypes, {name: testType.name})) {
       this.excludedTypes.push(testType);
     }
-    let existingTestType : TestType = _.find(this.excludedTypes, {name: testType.name});
-    existingTestType.isExcluded = !existingTestType.isExcluded;
-    console.log(this.excludedTypes);
+    else {
+      let existingTestType: TestType = _.find(this.excludedTypes, {name: testType.name});
+      existingTestType.isExcluded = !existingTestType.isExcluded;
+      console.log(this.excludedTypes);
+    }
   }
 }

@@ -49,8 +49,8 @@ export class ConverterService {
     let lines: string[] = this.inputObject.input.split('\n');
     let bloodTestDates = ConverterService.getBloodTestDates(lines[0]);
     this.extractTestResults(lines, bloodTestDates);
-    this.getUniqueTestTypes();
     this.updateTestExcluded();
+    this.shortenTestResultNames();
     this.buildResultString(this.testResults, bloodTestDates);
   }
 
@@ -75,7 +75,12 @@ export class ConverterService {
 
   updateTestExcluded() {
     _.forEach(this.testResults, (testResult) => {
-
+      let existingTypePreference = _.find(this.excludeTypesService.excludedTypes, (testType) => {
+        return testResult.type.name === testType.name;
+      });
+      if (existingTypePreference) {
+        testResult.type.isExcluded = existingTypePreference.isExcluded;
+      }
     });
   }
 
@@ -95,23 +100,6 @@ export class ConverterService {
     return bloodTestDates;
   }
 
-  getUniqueTestTypes() {
-    let uniqueTestResults = _.uniqBy(this.testResults, (testResult: TestResult) => {
-      return testResult.type.name;
-    });
-
-    this.uniqueTestTypes = _.map(uniqueTestResults, (testResult: TestResult) => {
-      return testResult.type;
-    });
-
-    _.forEach(this.uniqueTestTypes, (testType: TestType) => {
-      let existingType = _.find(this.excludeTypesService.excludedTypes, {name: testType.name});
-      if (existingType) {
-        testType.isExcluded = existingType.isExcluded;
-      }
-    });
-  }
-
   buildResultString(testResults: Array<TestResult>, dateStrings: string[]) {
     for (let i = 0; i < dateStrings.length; i++) {
       let testsByDate = _.filter(testResults, ['datePerformed', dateStrings[i]]);
@@ -122,10 +110,10 @@ export class ConverterService {
       for (let j = 0; j < testsByDate.length; j++) {
         let testResult = testsByDate[j];
         if (!testResult.type.isExcluded) {
-          this.resultObject.resultString += testResult.type.name + ' ' + testResult.value;
-        }
-        if (j != testsByDate.length - 1) {
-          this.resultObject.resultString += '\t';
+          this.resultObject.resultString += testResult.type.shortName + ' ' + testResult.value;
+          if (j != testsByDate.length - 1) {
+            this.resultObject.resultString += '\t';
+          }
         }
       }
     }

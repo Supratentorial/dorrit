@@ -18,9 +18,9 @@
     <hr/>
     <div *ngIf="converterService.uniqueTestTypes.length > 0">Select test types:</div>
     <div class="d-flex flex-wrap">
-      <div *ngFor="let testType of converterService.uniqueTestTypes">
-        <div (click)="toggleTestResult(testType)" class="test-type" [ngClass]="{'active': !testType.isExcluded}">
-          {{testType.name}}
+      <div *ngFor="let testResult of converterService.testResults | testTypeFilter">
+        <div (click)="toggleTestResult(testResult.type)" class="test-type" [ngClass]="{'active': !testResult.type.isExcluded}">
+          {{testResult.type.name}}
         </div>
       </div>
     </div>
